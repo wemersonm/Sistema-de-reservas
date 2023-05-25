@@ -1,0 +1,22 @@
+{
+    "name": "wemerson/phpoo",
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        },
+        "files":[
+
+        ]
+
+    },
+    "authors": [
+        {
+            "name": "wemersonm",
+            "email": "wemersonmoura02@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/var-dumper": "^6.2",
+        "league/plates": "^3.5"
+    }
+}
