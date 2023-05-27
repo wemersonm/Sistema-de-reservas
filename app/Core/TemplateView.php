@@ -15,6 +15,6 @@ abstract class  TemplateView
         }
 
         $templates = new Engine('../app/Views');
-        echo $templates->render($view, [$data, 'title' => $title]);
+        echo $templates->render($view, ['data' => $data, 'title' => $title]);
     }
 }

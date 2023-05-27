@@ -9,10 +9,16 @@ class Routes
         return [
             'GET' => [
                 '/' => 'HomeController@index',
-                '/car' => 'CarController@index',
-                '/car/[0-9a-z]+' => "HomeController@teste"
+                '/login' => "LoginController@index",
+                '/register' => "Registration@index",
+                '/logout' => "LoginController@logout",
+                '/cars/create' => "Car@create",
+
             ],
             'POST' => [
+                '/login' => "LoginController@enter",
+
+                '/cars/insert' => "Car@insert",
 
             ]
         ];
