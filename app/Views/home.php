@@ -25,18 +25,9 @@
     <p class="display-6 mt-5 text-center">Razões para alugar na CarReservExpress</p>
     <p class="fs-5 text-center">Confira os nossos diferenciais</p>
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 d-flex justify-content-center">
+
         <div class="col text-center card-spacing">
-            <div class="card h-100 w-100">
-                <img src="../assets/images/cards/card1.jpg" class="card-img-top h-100" alt="car">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Ofertas Especiais de Última Hora</h5>
-                    <p class="card-text">Economize ainda mais em sua reserva de carro com nossas ofertas especiais de última hora. Não perca a chance de obter descontos exclusivos em uma ampla seleção de veículos.</p>
-                    <a href="#" class="btn btn-danger mt-auto">Saiba mais</a>
-                </div>
-            </div>
-        </div>
-        <div class="col text-center card-spacing">
-            <div class="card h-100 w-100">
+            <div class="card h-100 w-100" style="border:none;">
                 <img src="../assets/images/cards/card1.jpg" class="card-img-top" alt="car">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Proteção Abrangente de Seguros</h5>
@@ -46,7 +37,7 @@
             </div>
         </div>
         <div class="col text-center card-spacing">
-            <div class="card h-100 w-100" style="width: 18rem;">
+            <div class="card h-100 w-100" style="border:none;">
                 <img src="../assets/images/cards/card1.jpg" class="card-img-top" alt="car">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Opções de Retirada e Devolução Flexíveis</h5>
@@ -56,7 +47,7 @@
             </div>
         </div>
         <div class="col text-center card-spacing">
-            <div class="card h-100 w-100">
+            <div class="card h-100 w-100" style="border:none;">
                 <img src="../assets/images/cards/card1.jpg" class="card-img-top" alt="car">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Opções de Pagamento Flexíveis</h5>

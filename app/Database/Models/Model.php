@@ -11,7 +11,8 @@ abstract class Model
     private string $fields = "*";
     private string $filters = "";
     private array $values = [];
-
+    private array $objJoin = [];
+   
     abstract protected function getTable();
 
     public function setFields(string $field)
@@ -24,12 +25,14 @@ abstract class Model
         $this->values = $filters->returnParamValues();
     }
 
+  
+
     public function fetchAll()
     {
         try {
             $conn =  Connection::connect();
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} {$this->filters}");
-
+           
             $stmt->execute($this->values);
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
         } catch (Exception $e) {
@@ -71,16 +74,51 @@ abstract class Model
         }
     }
 
+    public function multipleJoin(string $tableJoin, string $field1, string $operator, string $field2, string $typeJoin = 'INNER JOIN')
+    {
+        try {
+            $this->objJoin[] = "{$typeJoin} {$tableJoin} ON {$field1} {$operator} {$field2} ";
+            return $this;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+    public function dumpJoin(){
+
+        try {
+            if(!empty($this->objJoin)){
+                $format = '';
+                foreach($this->objJoin as $join){
+                    $format.= $join;
+                }
+            }
+            
+            $conn =  Connection::connect();
+            $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()}  
+            {$format}
+            {$this->filters}
+            ");
+           
+            $stmt->execute($this->values);
+
+            return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        
+    }
+
     public function join(string $tableJoin, string $field1, string $operator, string $field2, string $typeJoin = 'INNER JOIN')
     {
         try {
             $conn =  Connection::connect();
+
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()}  
             {$typeJoin} {$tableJoin} 
             ON {$field1} {$operator} {$field2} 
             {$this->filters}
             ");
-
+           
             $stmt->execute($this->values);
 
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
@@ -88,6 +126,7 @@ abstract class Model
             echo $e->getMessage();
         }
     }
+
     public function create(array $data)
     {
         try {

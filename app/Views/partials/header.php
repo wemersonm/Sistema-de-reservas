@@ -2,15 +2,15 @@
     <a class="navbar-brand text-dark" href="/">
         <span class="logo">CarReservExpress</span>
     </a>
-    <ul class="nav justify-content-center">
+    <ul class="nav justify-content-center fw-bold ">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Active</a>
+            <a class="nav-link text-danger" href="/cars">Carros disponiveis</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link text-danger" href="#">Ofertas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+            <a class="nav-link text-danger" href="#">Agências</a>
         </li>
         <li class="nav-item">
             <a class="nav-link disabled">Disabled</a>

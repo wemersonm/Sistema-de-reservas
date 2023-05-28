@@ -12,7 +12,9 @@ class Routes
                 '/login' => "LoginController@index",
                 '/register' => "Registration@index",
                 '/logout' => "LoginController@logout",
-                '/cars/create' => "Car@create",
+                '/cars/create' => "CarController@create",
+
+                '/cars' => "CarController@show",
 
             ],
             'POST' => [

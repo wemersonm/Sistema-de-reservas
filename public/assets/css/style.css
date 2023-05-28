@@ -17,6 +17,7 @@ header .navbar .navbar-brand span.logo{
 .container-login{
     margin: 20px auto;
 }
-.card-spacing{
-   
+
+.filters h5{
+    margin: 10px 0 5px 0;
 }

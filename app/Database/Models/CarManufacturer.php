@@ -2,10 +2,9 @@
 
 namespace app\Database\Models;
 
-
-class Car extends Model
+class CarManufacturer
 {
-    protected string $table = "cars";
+    protected string $table = "car_manufacturer";
 
    
 
