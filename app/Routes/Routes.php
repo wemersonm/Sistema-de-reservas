@@ -20,9 +20,16 @@ class Routes
                 '/reservations' => 'ReservationController@index',
                 '/checkout/details' => "CheckoutController@details",
 
-                '/error' => 'NotFoundController@index',
-                '/checkout/pay' => 'CheckoutController@pay'
                 
+                '/checkout/pay' => 'CheckoutController@pay',
+                
+                '/success' => "PaymentStatusController@success",
+                '/failure' => "PaymentStatusController@failure",
+                '/pending' => "PaymentStatusController@pending",
+
+                '/webhook' => "ReservationController@webhook",
+
+                '/error' => 'NotFoundController@index',
 
             ],
             'POST' => [

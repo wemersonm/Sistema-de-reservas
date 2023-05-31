@@ -9,13 +9,15 @@ use app\Database\Models\ModelGeneric;
 use app\Support\Csfr;
 use app\Support\FlashMessages;
 use app\Support\Validate;
+use MercadoPago\Item;
+use MercadoPago\Preference;
 use MercadoPago\SDK;
 
 class CheckoutController extends TemplateView
 {
     public function __construct()
     {
-        return !isLogged() ? redirect("/login") : '';
+        // return !isLogged() ? redirect("/login") : '';
     }
     public function insertDetails()
     {
@@ -87,10 +89,6 @@ class CheckoutController extends TemplateView
 
         $_SESSION[DATA_RESERVE][DATA_ORDER] = $dataOrder;
 
-        // $isCreated = $insertOrder->create($dataOrder);
-        // if (!$isCreated) {
-        //     return redirect($_SESSION[REDIRECT_BACK_LOGIN]);
-        // }
 
         return redirect('/checkout/details');
     }
@@ -111,30 +109,40 @@ class CheckoutController extends TemplateView
     }
 
     public function pay()
-    {   
+    {
 
         $dataCar = $_SESSION[DATA_RESERVE][DATA_CAR];
         $dataOrder = $_SESSION[DATA_RESERVE][DATA_ORDER];
+        $dataOrder['priceOrder'] = str_replace(',', '.', $dataOrder['priceOrder']);
 
-        SDK::setAccessToken(TOKEN); // Either Production or SandBox AccessToken
+        SDK::setAccessToken(TOKEN); 
 
-        $preference = new MercadoPago\Preference();
+        $preference = new Preference();
 
-        $item = new MercadoPago\Item();
-        $item->title = $data->description;
-        $item->quantity = $data->quantity;
-        $item->unit_price = $data->price;
+        $item = new Item();
+        $item->title = $dataCar['modelCar'];
+        $item->description = $dataCar['descriptionCar'];
+        $item->quantity = 1;
+        $item->unit_price = $dataOrder['priceOrder'];
+        $item->currency_id = "BRL";
+        $item->category_id = "Reserva de carro";
 
         $preference->items = array($item);
 
         $preference->back_urls = array(
-            "success" => "http://localhost:8080/feedback",
-            "failure" => "http://localhost:8080/feedback", 
-            "pending" => "http://localhost:8080/feedback"
+            "success" => "http://localhost:8000/success",
+            "failure" => "http://localhost:8000/failure",
+            "pending" => "http://localhost:8000/pending"
         );
-        $preference->auto_return = "approved"; 
-
+       
+         // $isCreated = $insertOrder->create($dataOrder);
+        // if (!$isCreated) {
+        //     return redirect($_SESSION[REDIRECT_BACK_LOGIN]);
+        // }
         $preference->save();
+        if($preference->error === null){
+            
+        }
         dd($preference);
     }
 }
