@@ -5,6 +5,7 @@ namespace app\Database\Models;
 use app\Database\Connection;
 use app\Database\Filters;
 use Exception;
+use PDO;
 
 abstract class Model
 {
@@ -12,7 +13,7 @@ abstract class Model
     private string $filters = "";
     private array $values = [];
     private array $objJoin = [];
-   
+
     abstract protected function getTable();
 
     public function setFields(string $field)
@@ -25,14 +26,12 @@ abstract class Model
         $this->values = $filters->returnParamValues();
     }
 
-  
-
     public function fetchAll()
     {
         try {
             $conn =  Connection::connect();
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} {$this->filters}");
-           
+
             $stmt->execute($this->values);
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
         } catch (Exception $e) {
@@ -83,29 +82,29 @@ abstract class Model
             echo $e->getMessage();
         }
     }
-    public function dumpJoin(){
+    public function dumpJoin()
+    {
 
         try {
-            if(!empty($this->objJoin)){
+            if (!empty($this->objJoin)) {
                 $format = '';
-                foreach($this->objJoin as $join){
-                    $format.= $join;
+                foreach ($this->objJoin as $join) {
+                    $format .= $join;
                 }
             }
-            
             $conn =  Connection::connect();
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()}  
             {$format}
             {$this->filters}
-            ");
-           
-            $stmt->execute($this->values);
+            ");     
 
+            
+            $stmt->execute($this->values);
+        
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-        
     }
 
     public function join(string $tableJoin, string $field1, string $operator, string $field2, string $typeJoin = 'INNER JOIN')
@@ -118,7 +117,7 @@ abstract class Model
             ON {$field1} {$operator} {$field2} 
             {$this->filters}
             ");
-           
+
             $stmt->execute($this->values);
 
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
@@ -130,7 +129,7 @@ abstract class Model
     public function create(array $data)
     {
         try {
-            $format = "INSERT INTO {$this->getTable()} VALUES (" . implode(", ", array_keys($data)) . ")";
+            $format = "INSERT INTO {$this->getTable()} (" . implode(", ", array_keys($data)) . ")";
             $format .= " VALUES (:" . implode(", :", array_keys($data)) . ")";
 
             $conn =  Connection::connect();
@@ -151,7 +150,7 @@ abstract class Model
             $pos = strripos($format, ",");
             $format = $pos != false ? substr_replace($format, "", $pos) : $format;
             $format .= " WHERE {$field} = :{$field}";
-           
+
             $data += [$field => $value];
             $conn =  Connection::connect();
             $stmt = $conn->prepare($format);

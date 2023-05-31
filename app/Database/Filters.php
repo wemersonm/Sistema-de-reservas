@@ -15,7 +15,7 @@ class Filters
             $a = implode(",", $value);
             $formater = "('" . implode("','", $value) . "')";
         } elseif (is_string($value)) {
-            $formater = "'{$value}'";
+            $formater = "{$value}";
         } elseif (is_bool($value)) {
             $formater = $value ? 1 : 0;
         } else {

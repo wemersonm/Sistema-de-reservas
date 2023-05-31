@@ -1,7 +1,7 @@
 <?php $this->layout('master', ['title' => $title]) ?>
 
 
-<div class="container container-login">
+<div class="container container-login ">
     <?php if (isset($_SESSION['flash']['errorLogin'])) : ?>
         <div class="alert alert-danger" role="alert">
             <?php echo getFlashMessage('errorLogin'); ?>

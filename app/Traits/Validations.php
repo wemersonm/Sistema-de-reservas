@@ -46,4 +46,23 @@ trait Validations
         }
         return strip_tags($value);
     }
+
+    public function date(string $field, string $params = ''){
+        $date = Request::input($field);
+        $dateTime = strtotime($date);
+        if($dateTime === false){
+            FlashMessages::setFlashMessage($field,"Data invalida");
+            return false;
+        }
+        return date("Y-m-d",$dateTime);
+    }
+    public function hour(string $field, string $params = ''){
+        $hour =  Request::input($field); 
+        $dateTime = strtotime($hour);
+        if($dateTime === false ){
+            FlashMessages::setFlashMessage($field,"Hora invalida");
+            return false;
+        }
+        return date("H:i",$dateTime);
+    }
 }

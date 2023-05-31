@@ -12,15 +12,23 @@ class Routes
                 '/login' => "LoginController@index",
                 '/register' => "Registration@index",
                 '/logout' => "LoginController@logout",
-                '/cars/create' => "CarController@create",
+              
 
                 '/cars' => "CarController@show",
+                '/cars/[a-zA-Z0-9\-]+' => 'CarController@details',
+
+                '/reservations' => 'ReservationController@index',
+                '/checkout/details' => "CheckoutController@details",
+
+                '/error' => 'NotFoundController@index',
+                '/checkout/pay' => 'CheckoutController@pay'
+                
 
             ],
             'POST' => [
                 '/login' => "LoginController@enter",
-
-                '/cars/insert' => "Car@insert",
+                '/car/reserve' => "CheckoutController@insertDetails",
+               
 
             ]
         ];

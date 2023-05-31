@@ -1,23 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Comfortaa:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700&family=Righteous&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Comfortaa:wght@300;400;600;700&family=Open+Sans:wght@300;400;600;700&family=Righteous&display=swap");
 
-:root{
-    --color-red : #ad2323;
-    --color-black: #1b1a1f;
-    --color-white: #fafafa;
+:root {
+  --color-red: #ad2323;
+  --color-black: #1b1a1f;
+  --color-white: #fafafa;
 }
-*{
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
-}
-
-header .navbar .navbar-brand span.logo{
-    font-family: "Comfortaa";
-}
-.container-login{
-    margin: 20px auto;
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
 }
 
-.filters h5{
-    margin: 10px 0 5px 0;
+
+
+header .navbar .navbar-brand span.logo {
+  font-family: "Comfortaa";
+}
+
+
+.container-login {
+  margin: 20px auto;
+}
+
+.filters h5 {
+  margin: 10px 0 5px 0;
+}
+
+.truncate {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Número máximo de linhas a serem exibidas */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

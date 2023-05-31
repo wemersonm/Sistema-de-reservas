@@ -5,47 +5,50 @@ namespace app\Controllers;
 use app\Core\TemplateView;
 use app\Database\Filters;
 use app\Database\Models\Car;
+use app\Database\Models\CarManufaturer;
+use app\Database\Models\ModelGeneric;
 use app\Support\Validate;
-
+use League\Plates\Template\Template;
 
 class CarController  extends TemplateView
 {
-
-    public function create()
-    {
-        return TemplateView::view('addCar', [], 'Pagina dos carros');
-    }
-    public function insert()
-    {
-
-        $validate = new Validate;
-        $validations = $validate->validations([
-            'vni' => 'required',
-            'carMake' => 'required',
-            'carModel' => 'required',
-            'carModelYear' => 'required|maxLen:4|minLen:4'
-        ]);
-        if (!$validations) {
-            return redirect("/cars/create");
-        }
-        dd("Criou");
-    }
-
     public function show()
     {
 
         $car = new Car;
+        $carManufaturer = new ModelGeneric('car_manufaturer');
+        $typeCar = new ModelGeneric('type_cars');
+        $carTransmission = new ModelGeneric('car_transmission');
+        $carFuel = new ModelGeneric('car_fuel');
+
+        $car->setFields(FIELDS);
+        $car = joinsCar($car);
+        $data['cars'] = $car->dumpJoin();
+        $data['carManufaturer'] = $carManufaturer->fetchAll();
+        $data['typeCar'] = $typeCar->fetchAll();
+        $data['carTransmission'] = $carTransmission->fetchAll();
+        $data['carFuel'] = $carFuel->fetchAll();
+
+
+        return TemplateView::view('showCars', $data, 'Lista de carros');
+    }
+    public function details($slug)
+    {
+        $slug = $slug[0];
+        if (!isSlug($slug)) {
+            return redirect("/error");
+        }
+        $slug = strip_tags($slug);
+        $car = new ModelGeneric("cars");
         $filters = new Filters;
-        $car->setFields("cars.idCar, cars.nviCar, cars.modelCar, cars.yearCar, cars.descriptionCar, cars.capacityCar, cars.pricePerDayCar,
-                         cars.idManufature, car_manufaturer.nameManufature, car_manufaturer.imageManufature,
-                         cars.typeCar, type_cars.nameTypeCar,
-                         cars.transmissionCar, car_transmission.nameTransmissionCar,
-                         cars.typeFuelCar, car_fuel.nameFuelCar");
-        $car->multipleJoin('car_manufaturer', 'cars.idManufature', '=', 'car_manufaturer.idManufature', 'inner join');
-        $car->multipleJoin('type_cars', 'cars.typeCar', '=', 'type_cars.idTypeCar', 'inner join');
-        $car->multipleJoin('car_transmission', 'cars.transmissionCar', '=', 'car_transmission.idTransmissionCar', 'inner join');
-        $car->multipleJoin('car_fuel', 'cars.typeFuelCar', '=', 'car_fuel.idFuelCar', 'inner join');
-        dd($car->dumpJoin());
-        return TemplateView::view('showCars', [], 'Lista de carros');
+
+        $filters->where('cars.slugCar', '=', $slug);
+        $car->setFilters($filters);
+        $car->setFields(FIELDS);
+        $car = joinsCar($car);
+        $data = $car->dumpJoin();
+        $_SESSION[DATA_RESERVE][DATA_CAR] = $data[0];
+       
+        return TemplateView::view('detailsOrder', $data[0], 'Detalhes da reserva');
     }
 }

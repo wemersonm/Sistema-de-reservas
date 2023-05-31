@@ -1,104 +1,89 @@
-<?php $this->layout('master', ['title' => $title]) ?>
+    <?php $this->layout('master', ['title' => $title]) ?>
 
-<div class="container-fluid">
+    <div class="container-fluid mt-5">
 
-    <div class="row">
-        <div class="col-2">
-            <div class="filters">
-                <h4>Filtros</h4>
-                <hr>
-                <form action="/cars/search">
-                    <h5>Marca</h5>
-                    <h5>Ano de Fabricação</h5>
-                    <div class="form-group">
-                        <label for="inputFim">Ano XXXX</label>
-                        <input type="text" class="form-control" id="inputFim" placeholder="Digite o valor final">
-                    </div>
-                    <h5>Tipo</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            SUV
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                        <label class="form-check-label" for="flexCheckChecked">
-                            SEDAN
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            VAN
-                        </label>
-                    </div>
-                    <hr>
-                    <h5>Combustivel</h5>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            GASOLINA
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked">
-                        <label class="form-check-label" for="flexCheckChecked">
-                            ETANOL
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            DISEL
-                        </label>
-                    </div>
-                    <hr>
-                    <h5>Preço</h5>
-                    <div class="form-group">
-                        <label for="inputInicio">Início:</label>
-                        <input type="text" class="form-control" id="inputInicio" placeholder="Digite o valor inicial">
-                    </div>
-                    <div class="form-group">
-                        <label for="inputFim">Fim:</label>
-                        <input type="text" class="form-control" id="inputFim" placeholder="Digite o valor final">
-                    </div>
-                    <button class="btn btn-primary mt-3">Aplicar Filtros</button>
-                </form>
-            </div>
-        </div>
+        <div class="row">
+            <div class="col-2">
+                <div class="filters">
+                    <h3>Filtros</h3>
+                    <form action="" method="GET">
+                        <div class="manufaturerCar">
+                            <h5>Marca</h5>
+                            <?php foreach ($data['carManufaturer'] as $index => $carManufaturer) : ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="carManufature" value="<?php echo $carManufaturer['nameManufature']; ?>">
+                                    <label class="form-check-label">
+                                        <?php echo $carManufaturer['nameManufature']; ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
 
-        <div class="col-10">
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 d-flex align-items-stretch">
-                <div class="col">
-                    <div class="card h-100" style="height:540px;">
-                        <img src="https://autoshow.com.br/wp-content/uploads/2021/02/golf-1024x576.jpg?x84485" class="card-img-top" alt="car" width="100%" height="225">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text flex-grow-1">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="card-info mt-auto">
-                                <p class="fs-4 ">R$ 122,99</p>
-                                <a href="#" class="btn btn-danger w-100 ">Alugar</a>
+                        <div class="typeCar">
+                            <h5>Tipo</h5>
+                            <?php foreach ($data['typeCar'] as $index => $typeCar) : ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="typeCar" value="<?php echo $typeCar['nameTypeCar'] ?>">
+                                    <label class="form-check-label">
+                                        <?php echo $typeCar['nameTypeCar']; ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <div class="fuelCar">
+                            <h5>Combustivel</h5>
+                            <?php foreach ($data['carFuel'] as $index => $carFuel) : ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="fuelCar" value="<?php echo $carFuel['nameFuelCar']; ?>">
+                                    <label class="form-check-label">
+                                        <?php echo $carFuel['nameFuelCar']; ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="priceCar">
+                            <h5>Preço</h5>
+                            <div class="form-group">
+                                <label>De</label>
+                                <input type="text" class="form-control w-50" name="initialPriceCar" placeholder="inicial">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputFim">Até</label>
+                                <input type="text" class="form-control w-50" name="finalPriceCar" placeholder="final">
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card h-100" style="height:540px;">
-                        <img src="https://autoshow.com.br/wp-content/uploads/2021/02/golf-1024x576.jpg?x84485" class="card-img-top" alt="car" width="100%" height="225">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text flex-grow-1">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longerThis is a wider card with supporting tex order-1t below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                            <div class="card-info mt-auto">
-                                <p class="fs-4 ">R$ 122,99</p>
-                                <a href="#" class="btn btn-danger w-100 ">Alugar</a>
-                            </div>
-                        </div>
-                    </div>
+                        <button class="btn btn-primary mt-3">Aplicar Filtros</button>
+                    </form>
                 </div>
             </div>
-        </div>
 
+            <div class="col-10">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 d-flex align-items-stretch">
+                    <?php foreach ($data['cars'] as $index => $car) : ?>
+
+                        <div class="col">
+
+                            <div class="card" style="height: 500px;">
+                                <img src="/assets/images/cars/<?php echo $car['imageCar']; ?>" class="card-img-top" alt="car" width="100%" height="250px;" alt="Car">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-danger"><?php echo $car['modelCar']; ?></h5>
+                                    <div class="card-text flex-grow-1" style="max-height: 100px; overflow: auto;">
+                                        <p class="truncate"><?php echo $car['descriptionCar']; ?></p>
+                                    </div>
+                                    <div class="card-info mt-auto">
+                                        <p class="fs-4">R$ <?php echo $car['pricePerDayCar']; ?></p>
+                                        <a href="/cars/<?php echo $car['slugCar']; ?>" class="btn btn-danger w-100">Alugar</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>

@@ -18,7 +18,7 @@
     </ul>
     <ul class="nav justify-content-end fw-bold text-dark">
         <li class="nav-item">
-            <a class="nav-link text-danger " href="#">Minhas Reservas</a>
+            <a class="nav-link text-danger " href="/reservations">Minhas Reservas</a>
         </li>
         <?php if (isLogged()) : ?>
             <li class="nav-item">
