@@ -5,13 +5,17 @@ namespace app\Controllers;
 use app\Core\TemplateView;
 use app\Database\Filters;
 use app\Database\Models\Car;
-use app\Database\Models\CarManufaturer;
 use app\Database\Models\ModelGeneric;
-use app\Support\Validate;
-use League\Plates\Template\Template;
+
 
 class CarController  extends TemplateView
 {
+    public function __construct()
+    {
+        if(isset($_SESSION[DATA_RESERVE])){
+            unset($_SESSION[DATA_RESERVE]);
+        }
+    }
     public function show()
     {
 

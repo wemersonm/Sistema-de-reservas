@@ -16,7 +16,7 @@ extract($data); ?>
             <h3 class="text-danger"><?php echo $dataCar['modelCar']; ?></h3>
             <div class="text-body-secondary"><?php echo $dataCar['descriptionCar']; ?></div>
             <div class="info-reservation fw-bold mt-3 ">
-                <p class="fs-3 text-success">R$ <?php echo $dataOrder['priceOrder']; ?></p>
+                <p class="fs-3 text-success">R$ <?php echo $dataOrder['amountReservation']; ?></p>
                 <table class="table text-center">
                     <tr>
                         <th><span class="badge bg-primary rounded text-white">Data de retirada</span></th>

@@ -18,7 +18,7 @@
                 <form action="/car/reserve" method="POST" class="form-control d-flex flex-column align-items-center text-center">
                     <div class="pickupReservation">
                         <label id="pickupDate" class="form-label fs-5">Data retirada</label>
-                        <input class="form-control" type="date" name="pickupDate" id="pickupDate" value="2023-05-31">
+                        <input class="form-control" type="date" name="pickupDate" id="pickupDate" value="2023-06-01">
                         <?php echo getFlashMessage("pickupDate", 'color:red') ?>
                         <select class="form-select " name="pickupHour" id="pickupHour">
                             <option value="">Horario</option>
@@ -37,7 +37,7 @@
                     </div>
                     <div class="returnReservation">
                         <label id="returnDate" class="form-label fs-5">Data devolução</label>
-                        <input class="form-control " type="date" name="returnDate" id="returnDate" value="2023-06-01">
+                        <input class="form-control " type="date" name="returnDate" id="returnDate" value="2023-06-02">
                         <?php echo getFlashMessage("returnDate", 'color:red') ?>
                         <select class="form-select " name="returnHour" id="returnHour">
                             <option value="">Horario</option>

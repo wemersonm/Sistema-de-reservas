@@ -2,26 +2,22 @@
 
 namespace app\Controllers;
 
-
 use app\Core\TemplateView;
-use app\Database\Filters;
 use app\Database\Models\ModelGeneric;
 use app\Support\Csfr;
-use app\Support\FlashMessages;
+use app\Support\DataValidations;
+use app\Support\Payment as SupportPayment;
 use app\Support\Validate;
-use MercadoPago\Item;
-use MercadoPago\Preference;
-use MercadoPago\SDK;
+use app\Support\ValidationsDataSessions;
 
 class CheckoutController extends TemplateView
 {
     public function __construct()
     {
-        // return !isLogged() ? redirect("/login") : '';
+        
     }
     public function insertDetails()
     {
-
         Csfr::validateCsfr();
 
         $validate = new Validate;
@@ -34,73 +30,72 @@ class CheckoutController extends TemplateView
         ]);
 
         if (!$validations) {
-            return redirect($_SESSION['redirectBack']['previus']);
+            return redirect($_SESSION[REDIRECT_BACK]['previus']);
+            die;
         }
-        $fullDatePickup = ($validations['pickupDate'] . ' ' . $validations['pickupHour']);
-        $fullDateReturn = ($validations['returnDate'] . ' ' . $validations['returnHour']);
-        $fullDatePickupTime = strtotime($validations['pickupDate'] . ' ' . $validations['pickupHour']);
-        $fullDateReturnTime = strtotime($validations['returnDate'] . ' ' . $validations['returnHour']);
+
+        $fullDatePickup = DataValidations::fullDate($validations['pickupDate'], $validations['pickupHour']);
+        $fullDateReturn = DataValidations::fullDate($validations['returnDate'], $validations['returnHour']);
+
+        $fullDatePickupTimestamp =  strtotime($fullDatePickup);
+        $fullDateReturnTimestamp =  strtotime($fullDateReturn);
+
         $now = time();
         $timeAdvance = strtotime('+1 hour', $now);
 
-        if ($fullDatePickupTime < $timeAdvance) {
-            FlashMessages::setFlashMessage('dateReserve', "A data de retirada deve ser 1 hora de antecedência !");
-            return redirect(previusUrl());
+        $isDateValide = DataValidations::validateDatetimeReserve($fullDatePickupTimestamp, $fullDateReturnTimestamp,  $timeAdvance);
+        if (!$isDateValide) {
+            return redirect($_SESSION[REDIRECT_BACK]['previus']);
+            die;
         }
-        if ($timeAdvance > $fullDateReturnTime || $fullDatePickupTime == $fullDateReturnTime) {
-            FlashMessages::setFlashMessage('dateReserve', "A data de devolução deve nao pode ser antes ou igual da de coleta");
-            return redirect(previusUrl());
+        
+        $issetSessionData = ValidationsDataSessions::issetDataCarInSession();
+        if (!$issetSessionData) {
+            return redirect("/error"); 
+            die;
+        }
+        
+        if(!isLogged()){
+            return redirect("/login");
+            die;
         }
 
-        unset($_SESSION[REDIRECT_BACK_LOGIN]);
-
-        if (!isset($_SESSION[DATA_RESERVE][DATA_CAR]) ||  empty($_SESSION[DATA_RESERVE][DATA_CAR])) {
-            return redirect("/");
-        }
-
-        $insertOrder = new ModelGeneric('details_order');
-        $filters = new Filters;
-        $dataUser = dataUserLogged();
+        $dataUser = dataUserLogged(); 
+        
+        $dataOrder = [];
+        $_SESSION[DATA_RESERVE][DATA_ORDER] = &$dataOrder;
         $dataCar = $_SESSION[DATA_RESERVE][DATA_CAR];
-        $diff =  $fullDateReturnTime - $fullDatePickupTime;
-        $days = floatval(floor($diff / (60 * 60 * 24)));
-        $hours =  floatval(floor(($diff % (60 * 60 * 24)) / (60 * 60)));
-        $minutes = floatval(floor(($diff % (60 * 60)) / 60));
+
+        list($days, $hours, $minutes) = DataValidations::dateDiff($fullDateReturnTimestamp, $fullDatePickupTimestamp);
         $pricePerDayCar = floatval($dataCar['pricePerDayCar']);
 
-        $priceTotal = 0;
-        if ($days >= 1) {
-            $priceTotal += $days * $pricePerDayCar;
-            $priceTotal += ($hours / 24.0) * $pricePerDayCar;
-        } else {
-            $priceTotal = $pricePerDayCar;
-        }
-        $priceTotal = number_format($priceTotal, 2, ",", ".");
+        $priceTotal = DataValidations::calculatePriceReserve($days, $hours, $minutes, $pricePerDayCar);
 
         $dataOrder = [
-            'idUser' => $dataUser['idUser'],
             'idCar' => $dataCar['idCar'],
-            'pickupDate' => date("d/m/Y", strtotime($validations['pickupDate'])),
+            'idUser' => $dataUser['idUser'],
+            'pickupDate' => $validations['pickupDate'],
             'pickupHour' => $validations['pickupHour'],
-            'returnDate' => date("d/m/Y", strtotime($validations['returnDate'])),
+            'returnDate' => $validations['returnDate'],
             'returnHour' => $validations['returnHour'],
-            'priceOrder' => $priceTotal,
+            'amountReservation' => $priceTotal,
         ];
-
-        $_SESSION[DATA_RESERVE][DATA_ORDER] = $dataOrder;
-
 
         return redirect('/checkout/details');
     }
 
     public function details()
     {
+        if (!isLogged()) {
+           return redirect("/login");
+           die;
+        }
 
-        if (
-            (!isset($_SESSION[DATA_RESERVE][DATA_CAR]) ||  empty($_SESSION[DATA_RESERVE][DATA_CAR])) &&
-            (!isset($_SESSION[DATA_RESERVE][DATA_ORDER]) ||  empty($_SESSION[DATA_RESERVE][DATA_ORDER]))
-        ) {
-            return redirect("/");
+        $issetSessionData = ValidationsDataSessions::issetDataCarAndOrderInSession();
+        if (!$issetSessionData) {
+            return redirect("/error"); // if delete session on car and order/date/hour
+           
+            die;
         }
         $data['dataCar'] = $_SESSION[DATA_RESERVE][DATA_CAR];
         $data['dataOrder'] = $_SESSION[DATA_RESERVE][DATA_ORDER];
@@ -110,39 +105,33 @@ class CheckoutController extends TemplateView
 
     public function pay()
     {
-
+        $issetSessionData = ValidationsDataSessions::issetDataCarAndOrderInSession();
+        if (!$issetSessionData) {
+            dd("Aqui 1??");
+            return redirect("/error"); // if delete session on car and order/date/hour
+            die;
+        }
         $dataCar = $_SESSION[DATA_RESERVE][DATA_CAR];
         $dataOrder = $_SESSION[DATA_RESERVE][DATA_ORDER];
-        $dataOrder['priceOrder'] = str_replace(',', '.', $dataOrder['priceOrder']);
 
-        SDK::setAccessToken(TOKEN); 
+        $preference = SupportPayment::pay($dataCar, $dataOrder);
+    
+        $insertOrder = new ModelGeneric('reserved_cars');
 
-        $preference = new Preference();
+        $dataOrder['PaymentStatus'] = 'pending';
+        $dataOrder['ReservationStatus'] = 0;
+        $dataOrder['descriptionReservation'] = "Reserva do carro {$dataCar['modelCar']}, NVI:{$dataCar['nviCar']}, do dia/hora: {$dataOrder['pickupDate']}/ {$dataOrder['pickupHour']} até dia/hora {$dataOrder['returnDate']}/ {$dataOrder['returnHour']}";
+        $dataOrder['idPreference'] = $preference->id;
 
-        $item = new Item();
-        $item->title = $dataCar['modelCar'];
-        $item->description = $dataCar['descriptionCar'];
-        $item->quantity = 1;
-        $item->unit_price = $dataOrder['priceOrder'];
-        $item->currency_id = "BRL";
-        $item->category_id = "Reserva de carro";
+        $isCreated = $insertOrder->create($dataOrder);
 
-        $preference->items = array($item);
-
-        $preference->back_urls = array(
-            "success" => "http://localhost:8000/success",
-            "failure" => "http://localhost:8000/failure",
-            "pending" => "http://localhost:8000/pending"
-        );
-       
-         // $isCreated = $insertOrder->create($dataOrder);
-        // if (!$isCreated) {
-        //     return redirect($_SESSION[REDIRECT_BACK_LOGIN]);
-        // }
-        $preference->save();
-        if($preference->error === null){
-            
+        if (!$isCreated) {
+            return redirect("/error");
+            die;
         }
-        dd($preference);
+        if ($preference->error === null) {
+            unset($_SESSION[DATA_RESERVE]);
+            return redirect($preference->init_point);
+        }
     }
 }

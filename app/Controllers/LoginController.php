@@ -35,17 +35,12 @@ class LoginController extends TemplateView
         }
 
         $_SESSION[LOGGED] = $dataUser;
-    
-        if(isset($_SESSION[REDIRECT_BACK_LOGIN])){
-            return redirect($_SESSION[REDIRECT_BACK_LOGIN]);
-        }
         return redirect('/');
     }
 
     public function logout(){
         if(isset($_SESSION[LOGGED]) && !empty(isset($_SESSION[LOGGED]))){
             unset($_SESSION[LOGGED]);
-            unset($_SESSION[REDIRECT_BACK_LOGIN]);
             return redirect('/');
         }
     }

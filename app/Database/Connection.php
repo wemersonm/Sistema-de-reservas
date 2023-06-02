@@ -7,16 +7,16 @@ use PDOException;
 
 class Connection
 {
-    private const HOST = "localhost";
-    private const DATABASE = "reservation_system";
-    private const USERNAME = "root";
-    private const PASSWORD = "";
-    private const CHARSET = "utf8";
-
     public static function connect()
     {
+        $host = $_ENV['HOST'];
+        $database = $_ENV['DATABASE'];
+        $username = $_ENV['USERNAME'];
+        $password = $_ENV['PASSWORD'];
+        $charset = $_ENV['CHARSET'];
+
         try {
-            $conn = new PDO("mysql:host=" . self::HOST . ";dbname=" . self::DATABASE. ";charset=". self::CHARSET, self::USERNAME, self::PASSWORD);
+            $conn = new PDO("mysql:host=" . $host . ";dbname=" . $database . ";charset=" . $charset, $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             return $conn;

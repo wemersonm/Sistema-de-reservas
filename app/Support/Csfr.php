@@ -19,7 +19,6 @@ class Csfr
     }
     public static function validateCsfr(){
 
-       
         if(!isset($_SESSION['tokenCsfr'])){
             throw new Exception("1 Token invalido");
         }

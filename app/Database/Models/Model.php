@@ -138,6 +138,7 @@ abstract class Model
             return $stmt->rowCount() > 0 ? true : false;
         } catch (Exception $e) {
             echo $e->getMessage();
+            
         }
     }
     public function update(string $field, string $value, array $data)

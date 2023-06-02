@@ -6,7 +6,6 @@ cars.typeCar, type_cars.nameTypeCar, cars.slugCar,
 cars.transmissionCar, car_transmission.nameTransmissionCar,
 cars.typeFuelCar, car_fuel.nameFuelCar
 ');
-define("REDIRECT_BACK_LOGIN","redirectBackLogin");
 define("REDIRECT_BACK","redirectBack");
 define("DATA_RESERVE",'infoReserve');
 define("DATA_CAR",'dataCar');

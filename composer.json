@@ -12,12 +12,7 @@
             "app/helpers/constants.php",
             "app/helpers/slugfy.php",
             "app/helpers/joins.php",
-            "app/helpers/functionsHelper.php",
-            "config.php"
-
-
-
-
+            "app/helpers/functionsHelper.php"
         ]
 
     },
@@ -30,7 +25,8 @@
     "require": {
         "symfony/var-dumper": "^6.2",
         "league/plates": "^3.5",
-        "mercadopago/dx-php": "^2.5"
+        "mercadopago/dx-php": "^2.5",
+        "vlucas/phpdotenv": "^5.5"
         
     }
 }

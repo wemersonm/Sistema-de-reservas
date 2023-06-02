@@ -20,6 +20,3 @@ function redirectBack()
     }
 }
 
-function previusUrl(){
-    return $_SESSION[REDIRECT_BACK]['previus'];
-}

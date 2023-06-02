@@ -11,19 +11,24 @@ use app\Support\Csfr;
 
 class HomeController extends TemplateView
 {
+    public function __construct()
+    {
+        if (isset($_SESSION[DATA_RESERVE])) {
+            unset($_SESSION[DATA_RESERVE]);
+        }
+    }
     public function index()
     {
-       
+
         $conn = new Connection;
         $car = new Car;
         $filter = new Filters;
 
         $filter->limit(50);
         $car->setFilters($filter);
-       
-       // print_r($car->update('id',"5",['vni'=>"1GMDX03E8VD266902","carMake"=>"Pontiac","carModel"=>"Trans Sport","carModelYear"=>"1997"]));
-       
-        return $this->view('home',[],'CarReserveXpress');
+
+        // print_r($car->update('id',"5",['vni'=>"1GMDX03E8VD266902","carMake"=>"Pontiac","carModel"=>"Trans Sport","carModelYear"=>"1997"]));
+        unset($_SESSION[DATA_RESERVE]);
+        return $this->view('home', [], 'CarReserveXpress');
     }
-    
 }
