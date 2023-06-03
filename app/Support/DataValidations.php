@@ -2,6 +2,9 @@
 
 namespace app\Support;
 
+use app\Database\Filters;
+use app\Database\Models\ModelGeneric;
+
 class DataValidations
 {
 
@@ -42,5 +45,21 @@ class DataValidations
             $priceTotal = $pricePerDayCar;
         }
         return $priceTotal = number_format($priceTotal, 2, ',', '.');
+    }
+
+
+    public static function carAvailable(string $pickupDate, string $pickupHour, string $idCar)
+    {
+        $pickupHourAdvance = date("H:i", strtotime('-4 hours', strtotime($pickupHour)));
+        
+        $reservedCars = new ModelGeneric('reserved_cars');
+        $filters = new Filters;
+        $filters->where('idCar', ' = ', $idCar, "AND");
+        $filters->where('returnDate', '>', $pickupDate, "AND");
+        $filters->where('returnHour', '>', $pickupHourAdvance);
+
+        $reservedCars->setFilters($filters);
+        $existsReserve = $reservedCars->findBy();
+        return !empty($existsReserve) ? true : false;
     }
 }

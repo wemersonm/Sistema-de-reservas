@@ -38,12 +38,12 @@ abstract class Model
             echo $e->getMessage();
         }
     }
-    public function findBy(string $field, string $value)
+    public function findBy()
     {
         try {
             $conn =  Connection::connect();
-            $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} WHERE $field = :{$field}");
-            $stmt->execute([$field => $value]);
+            $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} WHERE {$this->filters}");
+            $stmt->execute($this->values);
             return $stmt->rowCount() > 0 ? $stmt->fetch() : [];
         } catch (Exception $e) {
             echo $e->getMessage();

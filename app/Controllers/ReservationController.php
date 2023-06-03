@@ -11,7 +11,7 @@ class ReservationController extends TemplateView
 {
     public function __construct()
     {
-        //return !isLogged() ? redirect("/login") : '';
+        return !isLogged() ? redirect("/login") : '';
     }
     public function index()
     {

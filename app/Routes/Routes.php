@@ -27,7 +27,7 @@ class Routes
                 '/failure' => "PaymentStatusController@failure",
                 '/pending' => "PaymentStatusController@pending",
 
-                '/webhook' => "ReservationController@webhook",
+                
 
                 '/error' => 'NotFoundController@index',
 
@@ -35,7 +35,7 @@ class Routes
             'POST' => [
                 '/login' => "LoginController@enter",
                 '/car/reserve' => "CheckoutController@insertDetails",
-               
+                '/webhook' => "CheckoutController@webhook",
 
             ]
         ];
