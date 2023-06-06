@@ -3,7 +3,6 @@
 namespace app\Controllers;
 
 use app\Core\TemplateView;
-use app\Database\Filters;
 use app\Database\Models\ModelGeneric;
 use app\Support\Csfr;
 use app\Support\DataValidations;
@@ -12,7 +11,7 @@ use app\Support\Payment as SupportPayment;
 use app\Support\RequestType;
 use app\Support\Validate;
 use app\Support\ValidationsDataSessions;
-use MercadoPago\Payment;
+
 
 class CheckoutController extends TemplateView
 {
@@ -43,10 +42,9 @@ class CheckoutController extends TemplateView
         $fullDatePickupTimestamp =  strtotime($fullDatePickup);
         $fullDateReturnTimestamp =  strtotime($fullDateReturn);
 
-        $now = time();
-        $timeAdvance = strtotime('+1 hour', $now);
+      
 
-        $isDateValide = DataValidations::validateDatetimeReserve($fullDatePickupTimestamp, $fullDateReturnTimestamp,  $timeAdvance);
+        $isDateValide = DataValidations::validateDatetimeReserve($fullDatePickupTimestamp, $fullDateReturnTimestamp);
         if (!$isDateValide) {
             return redirect($_SESSION[REDIRECT_BACK]['previus']);
             die;
@@ -59,8 +57,12 @@ class CheckoutController extends TemplateView
             die;
         }
 
-        DataValidations::carAvailable($validations['pickupDate'], $validations['pickupHour'], $_SESSION[DATA_RESERVE][DATA_CAR]['idCar']);
+        $carAvailable = DataValidations::carAvailable($validations['pickupDate'], $validations['pickupHour'], $validations['returnDate'], $validations['returnHour'], $_SESSION[DATA_RESERVE][DATA_CAR]['idCar']);
 
+        if (!$carAvailable) {
+            return redirect($_SESSION[REDIRECT_BACK]['previus']);
+            die;
+        }
 
         if (!isLogged()) {
             return redirect("/login");
@@ -91,7 +93,7 @@ class CheckoutController extends TemplateView
         return redirect('/checkout/details');
     }
 
-    public function details()
+    public function details() // show info before paying
     {
         if (!isLogged()) {
             return redirect("/login");
@@ -104,8 +106,16 @@ class CheckoutController extends TemplateView
 
             die;
         }
+
         $data['dataCar'] = $_SESSION[DATA_RESERVE][DATA_CAR];
         $data['dataOrder'] = $_SESSION[DATA_RESERVE][DATA_ORDER];
+
+        $carAvailable = DataValidations::carAvailable($data['dataOrder']['pickupDate'], $data['dataOrder']['pickupHour'], $data['dataOrder']['returnDate'], $data['dataOrder']['returnHour'], $_SESSION[DATA_RESERVE][DATA_CAR]['idCar']);
+
+        if (!$carAvailable) {
+            return redirect($_SESSION[REDIRECT_BACK]['previus']);
+            die;
+        }
 
         $this->view('checkout',  $data, 'Finalizar reserva');
     }
@@ -114,12 +124,18 @@ class CheckoutController extends TemplateView
     {
         $issetSessionData = ValidationsDataSessions::issetDataCarAndOrderInSession();
         if (!$issetSessionData) {
-            dd("Aqui 1??");
             return redirect("/error"); // if delete session on car and order/date/hour
             die;
         }
         $dataCar = $_SESSION[DATA_RESERVE][DATA_CAR];
         $dataOrder = $_SESSION[DATA_RESERVE][DATA_ORDER];
+
+        $carAvailable = DataValidations::carAvailable($dataOrder['pickupDate'], $dataOrder['pickupHour'], $dataOrder['returnDate'], $dataOrder['returnHour'], $dataOrder['idCar']);
+
+        if (!$carAvailable) {
+            return redirect($_SESSION[REDIRECT_BACK]['previus']);
+            die;
+        }
 
         $preference = new SupportPayment;
         $preference =  $preference->pay($dataCar, $dataOrder);
@@ -139,6 +155,7 @@ class CheckoutController extends TemplateView
             return redirect("/error");
             die;
         }
+
         if ($preference->error === null) {
             unset($_SESSION[DATA_RESERVE]);
             return redirect($preference->init_point);

@@ -42,13 +42,16 @@ abstract class Model
     {
         try {
             $conn =  Connection::connect();
-            $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} WHERE {$this->filters}");
+            $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} {$this->filters}");
+
             $stmt->execute($this->values);
+
             return $stmt->rowCount() > 0 ? $stmt->fetch() : [];
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
+
     public function delete(string $field, string $value)
     {
         try {
@@ -96,11 +99,11 @@ abstract class Model
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()}  
             {$format}
             {$this->filters}
-            ");     
+            ");
 
-            
+
             $stmt->execute($this->values);
-        
+
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -138,7 +141,6 @@ abstract class Model
             return $stmt->rowCount() > 0 ? true : false;
         } catch (Exception $e) {
             echo $e->getMessage();
-            
         }
     }
     public function update(string $field, string $value, array $data)
@@ -157,6 +159,31 @@ abstract class Model
             $stmt = $conn->prepare($format);
             $stmt->execute($data);
             return $stmt->rowCount() > 0 ? true : false;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function existsReserve(array $data)
+    {
+        try {
+           
+            $conn =  Connection::connect();
+            $stmt = $conn->prepare(
+            "SELECT {$this->fields}
+            FROM {$this->getTable()}
+            WHERE idCar = :idCar
+            AND  paymentStatus = '1'
+            AND reservationStatus = '1'
+            AND paymentId IS NOT NULL
+            AND ((:pickupDate BETWEEN pickupDate AND returnDate) and returnHour < :pickupHour)
+            OR
+            ((:returnDate BETWEEN pickupDate AND returnDate) AND returnHour <= :returnHour)
+            ");
+            
+            $stmt->execute($data);
+            
+            return $stmt->rowCount() > 0 ? $stmt->fetch() : [];
         } catch (Exception $e) {
             echo $e->getMessage();
         }

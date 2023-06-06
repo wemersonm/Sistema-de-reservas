@@ -8,8 +8,14 @@ use app\Database\Models\ModelGeneric;
 class DataValidations
 {
 
-    public static function validateDatetimeReserve(string $fullDatePickupTime, string $fullDateReturnTime, string $timeAdvance)
+    public static function validateDatetimeReserve(string $fullDatePickupTime, string $fullDateReturnTime)
     {
+        $now = time();
+        $timeAdvance = strtotime('+1 hour', $now);
+        if($fullDatePickupTime < $now){
+            FlashMessages::setFlashMessage('dateReserve', "Data invalida");
+            return false;
+        }
         if ($fullDatePickupTime < $timeAdvance) {
             FlashMessages::setFlashMessage('dateReserve', "A data de retirada deve ser 1 hora de antecedência !");
             return false;
@@ -48,18 +54,23 @@ class DataValidations
     }
 
 
-    public static function carAvailable(string $pickupDate, string $pickupHour, string $idCar)
+    public static function carAvailable(string $pickupDate, string $pickupHour, string $returnDate, string $returnHour, string $idCar)
     {
-        $pickupHourAdvance = date("H:i", strtotime('-4 hours', strtotime($pickupHour)));
-        
+        $data = [
+            'pickupDate' => $pickupDate,
+            'pickupHour' => $pickupHour,
+            'returnDate' => $returnDate,
+            'returnHour' => $returnHour,
+            'idCar' => $idCar
+        ];
         $reservedCars = new ModelGeneric('reserved_cars');
-        $filters = new Filters;
-        $filters->where('idCar', ' = ', $idCar, "AND");
-        $filters->where('returnDate', '>', $pickupDate, "AND");
-        $filters->where('returnHour', '>', $pickupHourAdvance);
 
-        $reservedCars->setFilters($filters);
-        $existsReserve = $reservedCars->findBy();
-        return !empty($existsReserve) ? true : false;
+        $existsReserve = $reservedCars->existsReserve($data);
+        
+        if (!empty($existsReserve)) {
+            FlashMessages::setFlashMessage('dateReserve', "Carro já está reservado na data informada");
+            return false;
+        }
+        return true;
     }
 }

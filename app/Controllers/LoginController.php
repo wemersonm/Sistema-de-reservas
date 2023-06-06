@@ -28,7 +28,10 @@ class LoginController extends TemplateView
             return redirect('/login');
         }
         $user = new User;
-        $dataUser = $user->findBy('emailUser', $validations['emailUser']);
+        $filters = new Filters;
+        $filters->where('emailUser','=', $validations['emailUser']);
+        $user->setFilters($filters);
+        $dataUser = $user->findBy();
         if (!password_verify($validations['passwordUser'], $dataUser['passwordUser'])) {
             FlashMessages::setFlashMessage('errorLogin', "Usuario ou senha incorretos");
             return  redirect('/login');

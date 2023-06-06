@@ -25,7 +25,7 @@ class Filters
         $bindParam = substr_count($fields, ".") ? str_replace(".", "", $fields) : $fields;
 
         $this->filters['where'][] = "{$fields} {$operator} :{$bindParam} {$logic}";
-        $this->bindValues  = [$bindParam => $formater];
+        $this->bindValues[$bindParam] = $formater;
     }
 
     public function limit(string $limit)
@@ -37,11 +37,20 @@ class Filters
     {
         $this->filters['order'] = " ODER BY :{$field}" . $order;
     }
+    public function between(string $field, string $value1, string $value2, string $logic = '')
+    {
+        if($logic == "OR" || $logic == "AND"){
+            $this->filters['between'][] = "( {$field} BETWEEN {$value1} AND {$value2}) {$logic}";
+        }else{
+            $this->filters['between'][] = " {$field} BETWEEN {$value1} AND {$value2} ";
+        }
+    }
 
     public function formatQuery()
     {
 
         $filter =  !empty($this->filters['where']) ? ' WHERE ' . implode(" ", $this->filters['where']) : '';
+        $filter .= !empty($this->filters['between']) ? implode(" ", $this->filters['between']) : '';
         $filter .= $this->filters['order'] ?? '';
         $filter .= $this->filters['limit'] ?? '';
         return $filter;

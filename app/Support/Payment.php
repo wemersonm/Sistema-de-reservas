@@ -68,18 +68,29 @@ class Payment
             $filters->where('collectorId', '=', $collectorId);
             $reservedCars->setFilters($filters);
             $dataReserve = $reservedCars->findBy();
+
             $dataPayment = $this->findPayment($idPayment);
             $status = $dataPayment->status;
+
+            $carAvailable = DataValidations::carAvailable($dataReserve['pickupDate'],  $dataReserve['pickupHour'],  $dataReserve['returnDate'],  $dataReserve['returnHour'],  $dataReserve['idCar']);
+            print_r($dataReserve);
+            
+            if (!$carAvailable && $carAvailable['paymentStatus'] == 'approved') {
+                $dataPayment->status = 'cancelled';
+                $dataPayment->update();
+                return redirect("/");
+                die;
+            }
             if (!empty($dataReserve['collectorId'])) {
                 $data = [
                     'paymentId' => $idPayment,
-                    'PaymentStatus' => $status
+                    'paymentStatus' => $status
                 ];
                 if ($status == 'approved') {
-                    $data['ReservationStatus'] = '1';
+                    $data['reservationStatus'] = '1';
                 }
                 if ($status == 'in_process' || $status == 'pending') {
-                    $data['ReservationStatus'] = '0';
+                    $data['reservationStatus'] = '0';
                 }
                 return $reservedCars->update('collectorId', $collectorId, $data) ? true : false;
             }

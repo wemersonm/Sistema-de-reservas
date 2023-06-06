@@ -15,10 +15,6 @@ $path = dirname(__FILE__,2);
 $dotEnv = Dotenv::createImmutable($path);
 $dotEnv->load(); 
 
-// $p = new Payment;
-// $payment = $p->findPayment('1315488273');
-// // print_r($payment->id);
-// die;
 
 Route::run();
 

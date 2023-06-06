@@ -37,6 +37,8 @@ extract($data); ?>
                         <td class="fw-bold" ><?php echo $dataOrder['returnHour'] ?></td>
                     </tr>
                 </table>
+                <?php echo getFlashMessage("dateReserve", 'color:red') ?>
+
                 <a href="/checkout/pay" class="btn btn-danger w-100">Pagar</a>
             </div>
         </div>
