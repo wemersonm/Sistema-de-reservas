@@ -6,6 +6,7 @@ use app\Core\Request;
 use app\Core\TemplateView;
 use app\Database\Filters;
 use app\Database\Models\ModelGeneric;
+use app\Support\Payment;
 
 class ReservationController extends TemplateView
 {
@@ -27,18 +28,24 @@ class ReservationController extends TemplateView
         $reservations = joinsCar($reservations);
 
         $data['reservationsCar'] = $reservations->dumpJoin();
-
+        foreach($data['reservationsCar'] as $key => $infoCar){
+            if($infoCar['paymentStatus'] == null){
+                $now = time();
+                $fullDate = $infoCar['pickupDate']. ' '. $infoCar['pickupHour'];
+                if($now < strtotime($fullDate)){
+                    $payment = new Payment();
+                    $dataPayment = $payment->findPreference($infoCar['idPreference']);
+                    $data['reservationsCar'][$key]['sandbox'] = $dataPayment->init_point;
+                }
+                else{
+                    $data['reservationsCar'][$key]['paymentStatus'] = 'cancelled';
+                }
+            }
+        }
+       
         $this->view('reservations', $data, 'Minhas reservas');
     }
 
   
-    public function webhook()
-    {
-        /* $path = '../testeWebhook.txt';
-        $content = Request::all();
-
-        file_put_contents($path,$content); */
-
-        
-    }
+   
 }

@@ -44,6 +44,9 @@ class Payment
             "pending" => "http://localhost:8000/pending"
         );
         $preference->auto_return = 'approved';
+        $externalReference = uniqid($dataOrder['idUser']);
+        $preference->external_reference = $externalReference;
+
         $preference->save();
         return $preference;
     }
@@ -58,41 +61,53 @@ class Payment
         return $dataPayment;
     }
 
+    public  function findPreference(string $idPreference)
+    {
+
+        $TOKEN = $this->token;
+        SDK::setAccessToken($TOKEN);
+        $payment = new Preference();
+        $dataPreference = $payment::find_by_id($idPreference);
+        return $dataPreference;
+    }
+
     public function updatePaymentReserve(array $data)
     {
         $idPayment = $data['data']['id'];
         $collectorId = $data['user_id'];
+
         if ($data['type'] == 'payment' && $data['action'] == 'payment.created') {
+            $dataPayment = $this->findPayment($idPayment); 
+
+            $externalReference = $dataPayment->external_reference;
+           
             $reservedCars = new ModelGeneric('reserved_cars');
             $filters = new Filters;
-            $filters->where('collectorId', '=', $collectorId);
+            $filters->where('externalReference', '=', $externalReference);
             $reservedCars->setFilters($filters);
-            $dataReserve = $reservedCars->findBy();
+            $dataReserve = $reservedCars->findBy(); 
+          
+            $carAvailable = DataValidations::carAvailable($dataReserve['pickupDate'], $dataReserve['pickupHour'], $dataReserve['returnDate'], $dataReserve['returnHour'], $dataReserve['idCar']);
 
-            $dataPayment = $this->findPayment($idPayment);
-            $status = $dataPayment->status;
-
-            $carAvailable = DataValidations::carAvailable($dataReserve['pickupDate'],  $dataReserve['pickupHour'],  $dataReserve['returnDate'],  $dataReserve['returnHour'],  $dataReserve['idCar']);
-            print_r($dataReserve);
-            
-            if (!$carAvailable && $carAvailable['paymentStatus'] == 'approved') {
-                $dataPayment->status = 'cancelled';
-                $dataPayment->update();
-                return redirect("/");
-                die;
+            if (!$carAvailable) {
+                $dataPayment->status = "cancelled";
+                $dataPayment->update();   
             }
-            if (!empty($dataReserve['collectorId'])) {
+            
+            $status = $dataPayment->status;
+            
+            if (!empty($dataReserve['externalReference'])) {
                 $data = [
-                    'paymentId' => $idPayment,
+                    'paymentId' => $dataPayment->id,
                     'paymentStatus' => $status
                 ];
                 if ($status == 'approved') {
                     $data['reservationStatus'] = '1';
                 }
-                if ($status == 'in_process' || $status == 'pending') {
+                if ($status == 'in_process' || $status == 'pending' || $status == 'cancelled') {
                     $data['reservationStatus'] = '0';
                 }
-                return $reservedCars->update('collectorId', $collectorId, $data) ? true : false;
+                return $reservedCars->update('externalReference', $externalReference, $data) ? true : false;
             }
         }
     }

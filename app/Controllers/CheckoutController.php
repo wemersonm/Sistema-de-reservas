@@ -50,16 +50,17 @@ class CheckoutController extends TemplateView
             die;
         }
 
-
+         
         $issetSessionData = ValidationsDataSessions::issetDataCarInSession();
         if (!$issetSessionData) {
             return redirect("/error");
             die;
         }
-
+        
         $carAvailable = DataValidations::carAvailable($validations['pickupDate'], $validations['pickupHour'], $validations['returnDate'], $validations['returnHour'], $_SESSION[DATA_RESERVE][DATA_CAR]['idCar']);
 
         if (!$carAvailable) {
+            
             return redirect($_SESSION[REDIRECT_BACK]['previus']);
             die;
         }
@@ -106,12 +107,12 @@ class CheckoutController extends TemplateView
 
             die;
         }
-
+        
         $data['dataCar'] = $_SESSION[DATA_RESERVE][DATA_CAR];
         $data['dataOrder'] = $_SESSION[DATA_RESERVE][DATA_ORDER];
 
         $carAvailable = DataValidations::carAvailable($data['dataOrder']['pickupDate'], $data['dataOrder']['pickupHour'], $data['dataOrder']['returnDate'], $data['dataOrder']['returnHour'], $_SESSION[DATA_RESERVE][DATA_CAR]['idCar']);
-
+        
         if (!$carAvailable) {
             return redirect($_SESSION[REDIRECT_BACK]['previus']);
             die;
@@ -148,6 +149,7 @@ class CheckoutController extends TemplateView
         $dataOrder['idPreference'] = $preference->id;
         $dataOrder['collectorId'] = $preference->collector_id;
         $dataOrder['paymentId'] = null;
+        $dataOrder['externalReference'] = $preference->external_reference;
 
         $isCreated = $insertOrder->create($dataOrder);
 
