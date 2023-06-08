@@ -10,7 +10,7 @@ class Routes
             'GET' => [
                 '/' => 'HomeController@index',
                 '/login' => "LoginController@index",
-                '/register' => "Registration@index",
+                '/register' => "RegistrationController@index",
                 '/logout' => "LoginController@logout",
               
 
@@ -20,6 +20,7 @@ class Routes
                 '/reservations' => 'ReservationController@index',
                 '/checkout/details' => "CheckoutController@details",
 
+                '/reservation/cancel/[0-9]+' => "ReservationController@cancel",
                 
                 '/checkout/pay' => 'CheckoutController@pay',
                 
@@ -34,6 +35,7 @@ class Routes
             ],
             'POST' => [
                 '/login' => "LoginController@enter",
+                '/userRegister' => "RegistrationController@create",
                 '/car/reserve' => "CheckoutController@insertDetails",
                 '/webhook' => "CheckoutController@webhook",
 

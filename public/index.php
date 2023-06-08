@@ -3,10 +3,9 @@
 require "../vendor/autoload.php";
 session_start();
 
+use app\Core\Request;
 use app\Core\Route;
-use app\Database\Filters;
-use app\Database\Models\ModelGeneric;
-use app\Support\Payment;
+use app\Support\DocumentValidator;
 use Dotenv\Dotenv;
 
 
