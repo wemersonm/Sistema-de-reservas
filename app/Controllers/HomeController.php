@@ -2,12 +2,9 @@
 
 namespace app\Controllers;
 
-use app\Core\Request;
 use app\Core\TemplateView;
-use app\Database\Connection;
 use app\Database\Filters;
-use app\Database\Models\Car;
-use app\Support\Csfr;
+use app\Database\Models\ModelGeneric;
 
 class HomeController extends TemplateView
 {
@@ -20,15 +17,18 @@ class HomeController extends TemplateView
     public function index()
     {
 
-        $conn = new Connection;
-        $car = new Car;
-        $filter = new Filters;
+        $cars = new ModelGeneric('cars');
+        $filters = new Filters;
+        $filters->where('cars.offer', '=', '1');
+        $cars->setFilters($filters);
+        $cars->setFields(FIELDS);
+        $cars = joinsCar($cars);
+        $dataCars = $cars->dumpJoin();
 
-        $filter->limit(50);
-        $car->setFilters($filter);
 
-        // print_r($car->update('id',"5",['vni'=>"1GMDX03E8VD266902","carMake"=>"Pontiac","carModel"=>"Trans Sport","carModelYear"=>"1997"]));
-        unset($_SESSION[DATA_RESERVE]);
-        return $this->view('home', [], 'CarReserveXpress');
+        if (isset($_SESSION[DATA_RESERVE])) {
+            unset($_SESSION[DATA_RESERVE]);
+        }
+        return $this->view('home', $dataCars, 'CarReserveXpress');
     }
 }

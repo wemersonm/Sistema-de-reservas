@@ -14,7 +14,6 @@ function redirectBack()
             'previus' => ''
         ];
     } else {
-
         $_SESSION[REDIRECT_BACK]['previus'] = $_SESSION[REDIRECT_BACK]['actual'];
         $_SESSION[REDIRECT_BACK]['actual'] = $uri;
     }

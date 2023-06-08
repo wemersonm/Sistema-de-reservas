@@ -43,7 +43,6 @@ abstract class Model
         try {
             $conn =  Connection::connect();
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} {$this->filters}");
-
             $stmt->execute($this->values);
 
             return $stmt->rowCount() > 0 ? $stmt->fetch() : [];
@@ -52,12 +51,12 @@ abstract class Model
         }
     }
 
-    public function delete(string $field, string $value)
+    public function delete(string $field = '', string $value = '')
     {
         try {
             $conn =  Connection::connect();
-            $stmt = $conn->prepare("DELETE FROM {$this->getTable()} WHERE $field = :{$field}");
-            $stmt->execute([$field => $value]);
+            $stmt = $conn->prepare("DELETE FROM {$this->getTable()} {$this->filters} ");
+            $stmt->execute($this->values);
             return $stmt->rowCount() > 0 ? true : false;
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -146,6 +145,7 @@ abstract class Model
     public function update(string $field, string $value, array $data)
     {
         try {
+            $data['updated_at'] = date("Y-m-d H:i:s");
             $format = "UPDATE {$this->getTable()} SET ";
             foreach ($data as $index => $fieldData) {
                 $format .= "{$index} = :{$index}, ";
@@ -182,7 +182,8 @@ abstract class Model
                 OR
                 (:returnDate BETWEEN pickupDate AND returnDate)
             ) LIMIT 1
-            ");
+            "
+            );
 
             $stmt->execute($data);
 

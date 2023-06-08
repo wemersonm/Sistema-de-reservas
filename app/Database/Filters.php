@@ -35,7 +35,7 @@ class Filters
     }
     public function orderBy(string $field, string $order = 'asc')
     {
-        $this->filters['order'] = " ODER BY :{$field}" . $order;
+        $this->filters['order'] = " ORDER BY {$field} " . $order;
     }
     public function between(string $field, string $value1, string $value2, string $logic = '')
     {

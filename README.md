@@ -8,7 +8,7 @@ Requisitos Funcionais:
 
 3 - Cancelamento de reserva: Os usuários devem ter a opção de cancelar uma reserva existente dentro de um determinado período de tempo antes da data de retirada programada.
 
-5 - Gerenciamento de frota: O sistema deve permitir que os proprietários de carros adicionem, removam e atualizem informações sobre os carros disponíveis para reserva.
+5 - Gerenciamento de frota: O sistema deve permitir que os proprietários de carros adicionem, removam e atualizem informações sobre os carros disponíveis para reserva. *** painel ***
 
 6 - Autenticação e segurança: O sistema deve fornecer recursos de autenticação seguros para proteger as informações dos usuários e impedir o acesso não autorizado.
 

@@ -4,9 +4,11 @@ namespace app\Support;
 
 use app\Database\Filters;
 use app\Database\Models\ModelGeneric;
+use Exception;
 use MercadoPago\Item;
 use MercadoPago\Payment as MercadoPagoPayment;
 use MercadoPago\Preference;
+use MercadoPago\Refund;
 use MercadoPago\SDK;
 
 class Payment
@@ -15,13 +17,17 @@ class Payment
 
     public function __construct()
     {
-        $this->token = $_ENV['API_KEY_MERCADOPAGO'] ?? '';
+        try {
+            $this->token = $_ENV['API_KEY_MERCADOPAGO'] ?? '';
+            if ($this->token) {
+                SDK::setAccessToken($this->token);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
     }
-
     public function pay(array $dataCar, array $dataOrder)
     {
-        $TOKEN = $this->token;
-        SDK::setAccessToken($TOKEN);
 
         $init_price = str_replace('.', '', $dataOrder['amountReservation']);
         $init_price = str_replace(',', '.', $init_price);
@@ -54,8 +60,6 @@ class Payment
     public  function findPayment(string $idPayment)
     {
 
-        $TOKEN = $this->token;
-        SDK::setAccessToken($TOKEN);
         $payment = new MercadoPagoPayment;
         $dataPayment = $payment::find_by_id($idPayment);
         return $dataPayment;
@@ -64,38 +68,55 @@ class Payment
     public  function findPreference(string $idPreference)
     {
 
-        $TOKEN = $this->token;
-        SDK::setAccessToken($TOKEN);
         $payment = new Preference();
         $dataPreference = $payment::find_by_id($idPreference);
         return $dataPreference;
     }
 
+    public function updateCancellPayment(string $idPayment)
+    {
+        $payment = new MercadoPagoPayment();
+
+        $dataPayment = $payment->find_by_id($idPayment);
+
+        if ($dataPayment->status != 'cancelled') {
+            $dataPayment->status = "cancelled";
+            $dataPayment->update();
+        }
+        return $dataPayment;
+    }
+    public function refoundTotal(string $idPayment)
+    {
+        $refund = new Refund();
+        $refund->payment_id = $idPayment;
+        $refund->save();
+        return $refund;
+    }
     public function updatePaymentReserve(array $data)
     {
         $idPayment = $data['data']['id'];
         $collectorId = $data['user_id'];
 
         if ($data['type'] == 'payment' && $data['action'] == 'payment.created') {
-            $dataPayment = $this->findPayment($idPayment); 
+            $dataPayment = $this->findPayment($idPayment);
 
             $externalReference = $dataPayment->external_reference;
-           
+
             $reservedCars = new ModelGeneric('reserved_cars');
             $filters = new Filters;
             $filters->where('externalReference', '=', $externalReference);
             $reservedCars->setFilters($filters);
-            $dataReserve = $reservedCars->findBy(); 
-          
+            $dataReserve = $reservedCars->findBy();
+
             $carAvailable = DataValidations::carAvailable($dataReserve['pickupDate'], $dataReserve['pickupHour'], $dataReserve['returnDate'], $dataReserve['returnHour'], $dataReserve['idCar']);
 
             if (!$carAvailable) {
                 $dataPayment->status = "cancelled";
-                $dataPayment->update();   
+                $dataPayment->update();
             }
-            
+
             $status = $dataPayment->status;
-            
+
             if (!empty($dataReserve['externalReference'])) {
                 $data = [
                     'paymentId' => $dataPayment->id,

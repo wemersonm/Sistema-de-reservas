@@ -43,11 +43,13 @@
                         </table>
                     </div>
                     <?php if (isset($reservationDetails['sandbox'])) : ?>
-                        <div class="reserve-info">
-                            <a href="<?php echo $reservationDetails['sandbox']; ?>" class="btn btn-danger w-100 mb-1 fw-bold">Pagar agora</a>
-                            <a href="/reservation/cancel/<?php echo $reservationDetails['idReserve'];?>" class="btn btn-warning w-100 fw-bold">Cancelar</a>
-                        </div>
+
+                        <a href="<?php echo $reservationDetails['sandbox']; ?>" class="btn btn-danger w-100 mb-1 fw-bold">Pagar agora</a>
                     <?php endif; ?>
+                    <?php if (isset($reservationDetails['canCancell']) &&  $reservationDetails['canCancell'] === true) : ?>
+                        <a href="/reservation/cancel/<?php echo $reservationDetails['idReserve']; ?>" class="btn btn-warning w-100 fw-bold">Cancelar</a>
+                    <?php endif; ?>
+
 
                 </div>
             </div>

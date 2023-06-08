@@ -7,7 +7,7 @@
             <a class="nav-link text-danger" href="/cars">Carros disponiveis</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-danger" href="#">Ofertas</a>
+            <a class="nav-link text-danger" href="#offers">Ofertas</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-danger" href="#">Agências</a>

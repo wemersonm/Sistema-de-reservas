@@ -2,13 +2,13 @@
 <div id="carouselExample" class="carousel slide">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="../assets/images/banner/banner1.jpg" class="d-block w-100 img-fluid" alt="banner">
+            <a href="/cars"> <img src="../assets/images/banner/banner1.jpg" class="d-block w-100 img-fluid" alt="banner"></a>
         </div>
         <div class="carousel-item">
-            <img src="../assets/images/banner/banner2.jpg" class="d-block w-100 img-fluid" alt="banner">
+            <a href="/cars"><img src="../assets/images/banner/banner2.jpg" class="d-block w-100 img-fluid" alt="banner"></a>
         </div>
         <div class="carousel-item">
-            <img src="../assets/images/banner/banner3.jpg" class="d-block w-100 img-fluid" alt="banner">
+            <a href="/cars"> <img src="../assets/images/banner/banner3.jpg" class="d-block w-100 img-fluid" alt="banner"></a>
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -60,41 +60,33 @@
 </div>
 
 
-<div class="container">
+<div class="container mb-4" id="offers">
     <p class="display-6 mt-5 text-center">Ofertas</p>
     <p class="fs-5 text-center">Confira nossas ofertas de carros</p>
     <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 row-cols-lg-3">
-        <div class="col">
-            <div class="card h-100 w-100" style="width: 18rem;">
-                <img src="https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg" class="card-img-top" alt="carPromo">
-                <div class="card-body">
-                    <span class="badge text-bg-warning">Oferta</span>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link text-danger">Alugar</a>
-                </div>
+        <?php foreach ($data as $index => $car) : ?>
+            <div class="col">
+                <div class="card h-100 w-100" style="width: 18rem;">
+                    <div class="card-img">
+                        <img src="/assets/images/cars/<?php echo $car['imageCar']; ?>" class="card-img-top" alt="carPromo" style="height:250px">
+                    </div>
+                    <div class="card-body">
+                        <span class="badge text-bg-info  mt-1">Oferta</span>
+                        <h5 class="card-title">
+                            <?php echo $car['modelCar']; ?>
+                        </h5>
+                        <p class="card-text">
+                            <?php echo $car['descriptionCar']; ?>
+                        </p>
+                        <h4 class="card-title text-success">
+                            R$ <?php echo $car['pricePerDayCar']; ?>
+                        </h4>
+                        <a href="/cars/<?php echo $car['slugCar']; ?>" class=" btn btn-danger">Alugar</a>
+                    </div>
 
+                </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 w-100" style="width: 18rem;">
+        <?php endforeach; ?>
 
-                <img src="https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg" class="card-img-top" alt="carPromo">
-                <div class="card-body">
-                    <span class="badge text-bg-warning">Oferta</span>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link text-danger">Alugar</a>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 w-100" style="width: 18rem;">
-                <img src="https://cdni.autocarindia.com/utils/imageresizer.ashx?n=https://cms.haymarketindia.net/model/uploads/modelimages/Hyundai-Grand-i10-Nios-200120231541.jpg" class="card-img-top" alt="carPromo">
-                <div class="card-body">
-                    <span class="badge text-bg-warning">Oferta</span>
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    <a href="#" class="card-link text-danger">Alugar</a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>

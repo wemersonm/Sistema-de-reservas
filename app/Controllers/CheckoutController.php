@@ -43,14 +43,13 @@ class CheckoutController extends TemplateView
         $fullDateReturnTimestamp =  strtotime($fullDateReturn);
 
       
-
         $isDateValide = DataValidations::validateDatetimeReserve($fullDatePickupTimestamp, $fullDateReturnTimestamp);
         if (!$isDateValide) {
             return redirect($_SESSION[REDIRECT_BACK]['previus']);
             die;
         }
 
-         
+        
         $issetSessionData = ValidationsDataSessions::issetDataCarInSession();
         if (!$issetSessionData) {
             return redirect("/error");
