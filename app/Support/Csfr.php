@@ -20,13 +20,13 @@ class Csfr
     public static function validateCsfr(){
 
         if(!isset($_SESSION['tokenCsfr'])){
-            throw new Exception("1 Token invalido");
+            throw new Exception("Token invalido");
         }
 
         $token = Request::input('tokenCsfr');
         
         if($_SESSION['tokenCsfr'] != $token){
-            throw new Exception("2 Token invalido");
+            throw new Exception("Token invalido");
         }
         unset($_SESSION['tokenCsfr']);
         return true;

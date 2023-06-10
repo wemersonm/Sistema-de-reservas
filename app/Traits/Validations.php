@@ -106,4 +106,34 @@ trait Validations
         $value = password_hash($value, PASSWORD_DEFAULT);
         return  $value;
     }
+
+    public function licensePlate(string $field, string $param = '')
+    {
+        $value = trim(Request::input($field));
+        if(!($this->patternBr($value) || $this->patternMs($value))){
+            FlashMessages::setFlashMessage($field, "Placa no formato invalido");
+            return false;
+        }
+        return $value;
+        
+    }
+
+
+    private function patternBr(string $string){
+
+        if(preg_match("^[A-Z]{3}\-[0-9]{4}$",$string)){
+            return true;
+        }
+        return false;
+
+    }
+    private function patternMs(string $string){
+
+        if(preg_match("^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$",$string)){
+            return true;
+        }
+        return false;
+
+    }
+
 }

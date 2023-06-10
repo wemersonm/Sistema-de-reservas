@@ -49,17 +49,28 @@ class Request
         return $all;
     }
 
-    public static function query(string $query){
+    public static function file(string $field)
+    {
+        if(isset($_FILES[$field])){
+            return $_FILES;
+        }
+        return false;
+    }
+
+
+    public static function query(string $query)
+    {
         if (isset($GET[$query])) {
             return $GET[$query];
         }
         return throw new Exception("O indice {$query} não existe");
     }
-    public static function toJSON(array $json){
+    public static function toJSON(array $json)
+    {
         return json_encode($json);
     }
-    public static function toArray($json){
-        return json_decode($json,true);
+    public static function toArray($json)
+    {
+        return json_decode($json, true);
     }
-
 }

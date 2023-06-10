@@ -31,6 +31,25 @@ class Routes
                 
 
                 '/error' => 'NotFoundController@index',
+ 
+
+                // admin routes
+                '/admin/login' => "admin\LoginController@index",
+                '/admin/logout' => "admin\LoginController@logout",
+
+                '/admin' => "admin\HomeController@index",
+
+                '/admin/cars' => "admin\CarController@index",
+
+                '/admin/car/edit/[0-9]+' => "admin\CarController@edit",
+                '/admin/car/delete/[0-9]+' => "admin\CarController@delete",
+
+
+
+                '/admin/error' => 'admin\NotFoundController@index',
+
+
+
 
             ],
             'POST' => [
@@ -38,6 +57,11 @@ class Routes
                 '/userRegister' => "RegistrationController@create",
                 '/car/reserve' => "CheckoutController@insertDetails",
                 '/webhook' => "CheckoutController@webhook",
+
+                // admin routes
+                '/admin/login' => "admin\LoginController@enter",
+
+               '/admin/car/edit/[0-9]+' => "admin\CarController@update",
 
             ]
         ];

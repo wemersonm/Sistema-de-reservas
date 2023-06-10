@@ -39,6 +39,7 @@ class FilterRoute
                 return $route;
             }
         }
+        
         return "NotFoundController@index";
     }
 

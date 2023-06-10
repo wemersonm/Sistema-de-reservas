@@ -13,8 +13,11 @@ abstract class  TemplateView
         if (!file_exists($pathFile)) {
             throw new Exception("A view {$view} não existe");
         }
-
+        
         $templates = new Engine('../app/Views');
+        
+        $templates->addFolder('admin', dirname($pathFile,1));
+        
         echo $templates->render($view, ['data' => $data, 'title' => $title]);
     }
 }

@@ -11,9 +11,19 @@ class Controller
 {
     public function execute(string $route)
     {
+        $controllerAndMethod = $route;
+        $folder = '';
+        if (strpos($route, '\\') !== false) {
+            list($folder, $controllerAndMethod) = explode('\\', $route);
+        }
 
-        list($controller, $method) = explode("@", $route);
+        list($controller, $method) = explode("@", $controllerAndMethod);
+
         $controllerWithNamespace = "app\\Controllers\\" . $controller;
+        if ($folder != '') {
+            $controllerWithNamespace = "app\\Controllers\\{$folder}\\" . $controller;
+        }
+       
         if (!class_exists($controllerWithNamespace)) {
             throw new Exception("A classe {$controller} não existe");
         }
