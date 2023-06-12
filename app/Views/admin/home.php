@@ -17,7 +17,7 @@
                 <h4 class="card-header">Reservas de carros</h4>
                 <div class="card-body">
                     <h5 class="card-title">Acessar seção de reservas de carros</h5>
-                    <a href="#" class="btn btn-danger">Acessar</a>
+                    <a href="/admin/reserves" class="btn btn-danger">Acessar</a>
                 </div>
             </div>
 

@@ -14,7 +14,7 @@ trait Validations
     public function required(string $field, string $param)
     {
         $value = trim(Request::input($field));
-        if (empty($value)) {
+        if (empty($value) && $value !== '0') {
             FlashMessages::setFlashMessage($field, "Preencha o campo corretamente");
             return false;
         }
@@ -60,7 +60,7 @@ trait Validations
         $users->setFilters($filters);
         $existsEmail = $users->findBy();
 
-        
+
         if (!empty($existsEmail)) {
             FlashMessages::setFlashMessage($field, "E-mail já cadastrado no sistema");
             return false;
@@ -110,30 +110,73 @@ trait Validations
     public function licensePlate(string $field, string $param = '')
     {
         $value = trim(Request::input($field));
-        if(!($this->patternBr($value) || $this->patternMs($value))){
+        if (!($this->patternBr($value) || $this->patternMs($value))) {
             FlashMessages::setFlashMessage($field, "Placa no formato invalido");
             return false;
         }
         return $value;
-        
     }
 
+    public function size(string $field, string $param = '')
+    {
+        $value = trim(Request::input($field));
+        if (strlen($value) != $param) {
+            FlashMessages::setFlashMessage($field, "Campo pode ter no maximo {$param} caracteres");
+            return false;
+        }
+        return $value;
+    }
 
-    private function patternBr(string $string){
+    public function number(string $field, string $param = '')
+    {
+        $value = trim(Request::input($field));
+        if (!is_numeric($value)) {
+            FlashMessages::setFlashMessage($field, "Campo suporta apenas numeros");
+            return false;
+        }
+        return $value;
+    }
 
-        if(preg_match("^[A-Z]{3}\-[0-9]{4}$",$string)){
+    public function fileImg(string $field, string $param = '')
+    {
+        $file = Request::file($field)['fileCar'];
+
+        if ($file['error'] === 4) {
+            return true;
+        }
+        $allowedTypes = ['image/jpg', 'image/jpeg', 'image/png'];
+        if (!in_array($file['type'], $allowedTypes)) {
+            FlashMessages::setFlashMessage($field, "Formato de arquivo invalido");
+            return false;
+        }
+        return $file['tmp_name'];
+    }
+
+    public function fileRequired(string $field, string $param = '')
+    {
+        $file = Request::file($field)['fileCar'];
+        if ($file['error'] === 4) {
+            FlashMessages::setFlashMessage($field, "Imagem do veiculo não inserida");
+            return false;
+        }
+        return $file;
+    }
+
+    private function patternBr(string $string)
+    {
+
+        if (preg_match("/^[A-Z]{3}\-[0-9]{4}/", $string)) {
+
             return true;
         }
         return false;
-
     }
-    private function patternMs(string $string){
+    private function patternMs(string $string)
+    {
 
-        if(preg_match("^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}$",$string)){
+        if (preg_match("/^[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}/", $string)) {
             return true;
         }
         return false;
-
     }
-
 }

@@ -12,6 +12,8 @@ define("DATA_CAR",'dataCar');
 define("DATA_ORDER",'infoOrder');
 define("ADM_LOGGED","admLogged");
 
+define('FIELDS_RESERVES',' reserved_cars.*, users.nameUser, users.cpfUser,users.phoneUser,
+cars.modelCar, cars.idCar ');
 
 
 

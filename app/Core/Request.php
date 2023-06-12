@@ -12,6 +12,7 @@ class Request
         if (isset($_POST[$field])) {
             return $_POST[$field];
         }
+        
         return throw new Exception("O indice {$field} não existe");
     }
 

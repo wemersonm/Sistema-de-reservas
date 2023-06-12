@@ -8,3 +8,13 @@ function joinsCar(object $car){
     // $car->multipleJoin('reserved_cars', 'cars.idCar', '=', 'reserved_cars.idCar', 'left join');
     return $car;
 }
+
+function joinsReserve(object $reserve){
+
+    $reserve->multipleJoin('users', 'users.idUser', '=', 'reserved_cars.idUser', 'inner join');
+    $reserve->multipleJoin('cars', 'cars.idCar', '=', 'reserved_cars.idCar', 'inner join');
+
+
+   
+    return $reserve;
+}

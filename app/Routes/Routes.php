@@ -44,7 +44,10 @@ class Routes
                 '/admin/car/edit/[0-9]+' => "admin\CarController@edit",
                 '/admin/car/delete/[0-9]+' => "admin\CarController@delete",
 
+                '/admin/car/create' => "admin\CarController@create",
+                '/admin/car/manufaturer/create' => "admin\CarController@createManufaturer",
 
+                '/admin/reserves' => 'admin\ReservationController@index',
 
                 '/admin/error' => 'admin\NotFoundController@index',
 
@@ -62,6 +65,13 @@ class Routes
                 '/admin/login' => "admin\LoginController@enter",
 
                '/admin/car/edit/[0-9]+' => "admin\CarController@update",
+
+               '/admin/car/create' => "admin\CarController@insert",
+
+               '/admin/car/manufaturer/insert' => 'admin\CarController@insertManufaturer',
+
+              
+
 
             ]
         ];

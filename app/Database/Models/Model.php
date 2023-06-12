@@ -100,7 +100,7 @@ abstract class Model
             {$this->filters}
             ");
 
-
+            
             $stmt->execute($this->values);
 
             return $stmt->rowCount() > 0 ? $stmt->fetchAll() : [];
