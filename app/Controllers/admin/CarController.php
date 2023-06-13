@@ -2,10 +2,10 @@
 
 namespace app\Controllers\admin;
 
-use app\Core\Request;
 use app\Core\TemplateView;
 use app\Database\Filters;
 use app\Database\Models\ModelGeneric;
+use app\Support\AccessLevel;
 use app\Support\Csfr;
 use app\Support\FileValidate;
 use app\Support\FlashMessages;
@@ -13,6 +13,16 @@ use app\Support\Validate;
 
 class CarController extends TemplateView
 {
+    public function __construct()
+    {
+
+        $access = AccessLevel::getAccessLevel();
+        if (!($access === 'Gerente' || $access === '*')) {
+            return redirect("/admin");
+            die;
+        }
+    }
+
     public function index()
     {
         $car = new ModelGeneric('cars');
@@ -164,6 +174,8 @@ class CarController extends TemplateView
             die;
         }
         $validations['imageCar'] = $fileName;
+        $slug = $validations['modelCar'] . ' ' . $validations['yearCar'] . ' ' . $validations['capacityCar'] . 'p ' . $validations['licensePlateCar'] . ' ' . $validations['nviCar'];
+        $validations['slugCar'] = slugfy($slug);
         unset($validations['fileCar']);
 
         $cars = new ModelGeneric('cars');

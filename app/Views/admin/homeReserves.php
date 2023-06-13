@@ -12,7 +12,7 @@
         </div>
     <?php endif; ?>
     <h1 class="text-danger text-center">Gestão de reservas</h1>
-    <form action="" method="POST" class="form-control">
+    <form action="" method="GET" class="form-control">
         <div class="mb-3">
             <label for="dateReserve" class="form-label fw-bold ">Pesquisar por data</label>
             <input type="date" class="form-control" name="dateReserve" id="dateReserve">
@@ -35,9 +35,6 @@
             <th>Preço</th>
             <th>Status Reserva</th>
 
-
-
-
             <th>Ações</th>
         </tr>
         <?php foreach ($data['cars_reserved'] as $index => $reserve) : ?>
@@ -53,8 +50,7 @@
                 <td><?php echo $reserve['reservationStatus']; ?></td>
 
                 <td>
-                    <a href="/admin/car/edit/<?php echo $car['idCar']; ?>" class="btn btn-success">Ver</a>
-
+                    <a href="/admin/reserve/<?php echo $reserve['idReserve']; ?>" class="btn btn-success">Ver</a>
                 </td>
             </tr>
         <?php endforeach; ?>

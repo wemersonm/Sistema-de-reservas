@@ -143,8 +143,9 @@ abstract class Model
         }
     }
     public function update(string $field, string $value, array $data)
-    {
+    {      
         try {
+           
             $data['updated_at'] = date("Y-m-d H:i:s");
             $format = "UPDATE {$this->getTable()} SET ";
             foreach ($data as $index => $fieldData) {

@@ -27,7 +27,7 @@
                 <h4 class="card-header">Gestão de funcionarios</h4>
                 <div class="card-body">
                     <h5 class="card-title">Acessar gestão de funcionarios</h5>
-                    <a href="#" class="btn btn-success">Acessar</a>
+                    <a href="/admin/empolyees" class="btn btn-success">Acessar</a>
                 </div>
             </div>
         </div>

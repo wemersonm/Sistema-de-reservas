@@ -48,9 +48,22 @@ class Routes
                 '/admin/car/manufaturer/create' => "admin\CarController@createManufaturer",
 
                 '/admin/reserves' => 'admin\ReservationController@index',
+                '/admin/reserve/[0-9]+' => 'admin\ReservationController@show',
+
+                '/admin/reserve/confirmCollect/[0-9]+' => 'admin\ReservationController@confirmCollect',
+                '/admin/reserve/confirmReturn/[0-9]+' => 'admin\ReservationController@confirmReturn',
+                '/admin/reserve/cancelCollect/[0-9]+' => 'admin\ReservationController@cancelCollect',
+                '/admin/reserve/cancelReturned/[0-9]+' => 'admin\ReservationController@cancelReturn',
+
+                
+
+                '/admin/reserve/cancelReserve/[0-9]+' => 'admin\ReservationController@cancelReserve',
+
+                '/admin/reserve/searchReserve' => 'admin\ReservationController@searchReserve',
+                '/admin/empolyees' =>  'admin\EmpolyeeController@index',
 
                 '/admin/error' => 'admin\NotFoundController@index',
-
+                
 
 
 

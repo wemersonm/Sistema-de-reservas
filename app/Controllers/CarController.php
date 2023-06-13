@@ -51,7 +51,9 @@ class CarController  extends TemplateView
         $car->setFields(FIELDS);
         $car = joinsCar($car);
         $data = $car->dumpJoin();
+    
         $_SESSION[DATA_RESERVE][DATA_CAR] = $data[0];
+
        
         return TemplateView::view('detailsOrder', $data[0], 'Detalhes da reserva');
     }

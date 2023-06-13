@@ -30,8 +30,7 @@ class Filters
 
     public function limit(string $limit)
     {
-        $this->filters['limit'] = " LIMIT ".$limit;
-       
+        $this->filters['limit'] = " LIMIT " . $limit;
     }
     public function orderBy(string $field, string $order = 'asc')
     {
@@ -39,12 +38,24 @@ class Filters
     }
     public function between(string $field, string $value1, string $value2, string $logic = '')
     {
-        if($logic == "OR" || $logic == "AND"){
+        if ($logic == "OR" || $logic == "AND") {
             $this->filters['between'][] = "( {$field} BETWEEN {$value1} AND {$value2}) {$logic}";
-        }else{
+        } else {
             $this->filters['between'][] = " {$field} BETWEEN {$value1} AND {$value2} ";
         }
     }
+
+    public function dumpAnd(Filters $filter)
+    {
+        if (!empty($this->filters['where'])) {
+            if (count($filter->filters['where']) > 1) {
+                for ($i = 0; $i < (count($filter->filters['where']) - 1); $i++) {
+                    $filter->filters['where'][$i] = $filter->filters['where'][$i] . " AND ";
+                }
+            }
+        }
+    }
+
 
     public function formatQuery()
     {
