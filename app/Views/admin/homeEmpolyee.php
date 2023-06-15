@@ -29,8 +29,8 @@
                 <td><?php echo $empolyee['accessLevel']; ?></td>
                 <td><?php echo $empolyee['permissions']; ?></td>
                 <td>
-                    <a href="/admin/car/edit/<?php echo $empolyee['idUser']; ?>" class="btn btn-warning">Editar</a>
-                    <a href="/admin/car/delete/<?php echo $empolyee['idUser']; ?>" class="btn btn-danger">Deletar</a>
+                    <a href="/admin/empolyee/edit/<?php echo $empolyee['idUser']; ?>" class="btn btn-warning">Editar</a>
+                    <a href="/admin/empolyee/delete/<?php echo $empolyee['idUser']; ?>" class="btn btn-danger">Deletar</a>
                 </td>
             </tr>
         <?php endforeach; ?>

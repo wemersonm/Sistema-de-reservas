@@ -61,6 +61,9 @@ class Routes
 
                 '/admin/reserve/searchReserve' => 'admin\ReservationController@searchReserve',
                 '/admin/empolyees' =>  'admin\EmpolyeeController@index',
+                '/admin/empolyee/edit/[0-9]+' => 'admin\EmpolyeeController@edit',
+                '/admin/empolyee/delete/[0-9]+' => 'admin\EmpolyeeController@delete',
+                '/admin/empolyee/create' => 'admin\EmpolyeeController@create',
 
                 '/admin/error' => 'admin\NotFoundController@index',
                 
@@ -82,6 +85,11 @@ class Routes
                '/admin/car/create' => "admin\CarController@insert",
 
                '/admin/car/manufaturer/insert' => 'admin\CarController@insertManufaturer',
+
+               '/admin/empolyee/edit/[0-9]+' => 'admin\EmpolyeeController@update',
+
+               '/admin/empolyee/create' => 'admin\EmpolyeeController@insert',
+
 
               
 

@@ -103,10 +103,32 @@ class Payment
             $externalReference = $dataPayment->external_reference;
 
             $reservedCars = new ModelGeneric('reserved_cars');
+            $car = new ModelGeneric('cars');
+            $user = new ModelGeneric('users');
+            $ttt = new ModelGeneric('testes');
+
+
             $filters = new Filters;
+            $filterCar = new Filters;
+            $filterUser = new Filters;
+
             $filters->where('externalReference', '=', $externalReference);
             $reservedCars->setFilters($filters);
             $dataReserve = $reservedCars->findBy();
+
+           
+
+            $filterCar->where('idCar', "=", $dataReserve['idCar']);
+            $car->setFilters($filterCar);
+            $dataCar = $car->findBy();
+
+           
+
+            $filterUser->where('idUser', '=', $dataReserve['idUser']);
+            $user->setFilters($filterUser);
+            $dataUser = $user->findBy();
+
+           
 
             $carAvailable = DataValidations::carAvailable($dataReserve['pickupDate'], $dataReserve['pickupHour'], $dataReserve['returnDate'], $dataReserve['returnHour'], $dataReserve['idCar']);
 
@@ -128,7 +150,24 @@ class Payment
                 if ($status == 'in_process' || $status == 'pending' || $status == 'cancelled') {
                     $data['reservationStatus'] = '0';
                 }
-                return $reservedCars->update('externalReference', $externalReference, $data) ? true : false;
+                $return =  $reservedCars->update('externalReference', $externalReference, $data) ? true : false;
+
+                if ($return) {
+                    $email = new Email();
+                    $dataTemplate = [
+                        'name' => $dataUser['nameUser'],
+                        'nameCar' => $dataCar['modelCar'],
+                        'amountPrice' => $dataReserve['amountReservation'],
+                        'pickupDate' => date("d/m/Y \á\s H:i", strtotime($dataReserve['pickupDate'] . ' ' . $dataReserve['pickupHour'])),
+                        'returnDate' => date("d/m/Y \á\s H:i", strtotime($dataReserve['returnDate'] . ' ' . $dataReserve['returnHour'])),
+                    ];
+                    $sent  = $email->setFrom('minhaempresa@alguma.com', "Car Reserve Express")
+                        ->setTo($dataUser['emailUser'], $dataUser['nameUser'])->setMessage("")
+                        ->setTemplate('reserve', $dataTemplate)
+                        ->setSubject("Reserva de carro")
+                        ->send();
+                }
+                return $return;
             }
         }
     }

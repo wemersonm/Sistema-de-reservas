@@ -4,6 +4,7 @@ require "../vendor/autoload.php";
 session_start();
 
 use app\Core\Route;
+use app\Support\Email;
 use Dotenv\Dotenv;
 use MercadoPago\Payment;
 use MercadoPago\SDK;
@@ -14,7 +15,6 @@ redirectBack();
 $path = dirname(__FILE__, 2);
 $dotEnv = Dotenv::createImmutable($path);
 $dotEnv->load();
-
 
 
 Route::run();

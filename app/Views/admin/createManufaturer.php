@@ -4,7 +4,7 @@
 
 <div class="container py-5 ">
     <div class="row">
-        <?php if (isset($_SESSION['flash']['successCreate'])) : ?>
+        <?php if (isset($_SESSION['flash']['successCreate']) && !empty($_SESSION['flash']['successCreate'])) : ?>
             <div class="alert alert-success" role="alert">
                 <?php echo getFlashMessage('successCreate'); ?>
             </div>

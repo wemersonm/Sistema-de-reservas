@@ -44,6 +44,8 @@ abstract class Model
             $conn =  Connection::connect();
             $stmt = $conn->prepare("SELECT {$this->fields} FROM {$this->getTable()} {$this->filters}");
             $stmt->execute($this->values);
+            
+        
 
             return $stmt->rowCount() > 0 ? $stmt->fetch() : [];
         } catch (Exception $e) {

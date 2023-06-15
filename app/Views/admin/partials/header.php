@@ -10,7 +10,7 @@
             <a class="nav-link text-danger" href="/admin/reserves">Reservas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-danger" href="/admin/employees">Funcionarios</a>
+            <a class="nav-link text-danger" href="/admin/empolyees">Funcionarios</a>
         </li>
 
     </ul>

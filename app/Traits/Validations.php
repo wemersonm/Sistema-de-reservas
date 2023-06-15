@@ -55,6 +55,9 @@ trait Validations
         $value = filter_input(INPUT_POST, $field, FILTER_VALIDATE_EMAIL);
 
         $users = new ModelGeneric("users");
+        if (!empty($param)) {
+            $users = new ModelGeneric($param);
+        }
         $filters = new Filters;
         $filters->where($field, '=', $value);
         $users->setFilters($filters);
