@@ -17,11 +17,6 @@ Requisitos Funcionais:
 8 - Pagamento: O sistema deve permitir que os usuários efetuem pagamentos online de forma segura para confirmar suas reservas.
 
 
-colors
-fundo #1b1a1f
-letras #ad2323
-
-
 
 
 
